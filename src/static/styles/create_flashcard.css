@@ -1,0 +1,50 @@
+form {
+ display: flex;
+ flex-direction: column;
+ margin: 100px;
+}
+.form-deck {
+  margin-bottom: 30px;
+}
+.form-deck input[type="text"] {
+  padding: 5px;
+  width: 250px;
+  border: 2px solid #000000;
+  border-radius: 5px;
+}
+
+.form-front, .form-back {
+  display: flex;
+  align-items: center;  
+  margin-bottom: 30px;
+}
+.form-deck label,  .form-front label, .form-back label {
+  margin-right: 20px;
+  font-size: 20px;
+  
+}
+.form-front textarea, .form-back textarea {
+  height: 100px;
+  width: 250px;
+  border: 2px solid #000000;
+  border-radius: 5px;   writing-mode: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
+}
+.form-actions input[type="submit"] {
+  padding: 5px 20px;
+  border: 3px solid #000000;
+  border-radius: 5px;
+  background-color: #63cf94;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.form-actions input[type="submit"]:hover {
+  background-color: #52b47a;
+}
