@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/header.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profile.css') }}">
+    <title>Flasheeta</title>
+</head>
+
+<body>
+  <header>  
+    <nav class="navbar">
+      <a id="decks" href="{{ url_for('decks.decks', user_id=current_user.id) }}">Decks</a>
+      <a id="new_flashcard" href="{{ url_for('flashcards.new_flashcard', user_id=current_user.id) }}">New Flashcard</a>
+      <a id="profile" href="{{ url_for('profile.profile', user_id=current_user.id) }}">Profile</a>
+    </nav>
+  </header>
+
+  <div class='profile'>
+    <h1>{{ current_user.name }}</h1>
+    <button>Logout</button>
+  </div>
+
+</html>

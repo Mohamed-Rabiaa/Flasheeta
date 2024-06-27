@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/auth_common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/register.css') }}">
+    <title>Flasheeta</title>
+  </head>
+
+  <body>
+    <form method='POST' action='/auth/register'>
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+	{{ form.username.label }} {{ form.username() }}
+	
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	<ul class=flashes>
+	  {% for message in messages %}
+	  <li>{{ message }}</li>
+	  {% endfor %}
+	</ul>
+	{% endif %}
+	{% endwith %}
+	<br>
+	<br>
+      </div>
+      <div class="form-actions">
+	{{ form.submit() }}
+      </div>
+      
+    </form>
+    
+  </body>

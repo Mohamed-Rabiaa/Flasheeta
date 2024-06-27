@@ -1,0 +1,37 @@
+form {
+  display: flex;
+  flex-direction: column;
+  /*padding: 20pxl;*/
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+label {
+  margin-bottom: 10px;
+  font: bold;
+  font-size: 20px;
+}
+input[type="text"] {
+  padding: 5px;
+  width: 250px;
+  border: 3px solid #000000;
+  border-radius: 5px;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+input[type="submit"] {
+  padding: 5px 20px;
+  border: 3px solid #000000;
+  border-radius: 5px;
+  background-color: #63cf94;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #52b47a;
