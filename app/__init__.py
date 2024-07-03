@@ -18,7 +18,7 @@ def create_app():
     app_config = Config()
     app.config.from_object(app_config)
     # Log the SECRET_KEY to ensure it's being set correctly
-    app.logger.debug(f"SECRET_KEY: {app.config['SECRET_KEY']}")
+    # app.logger.debug(f"SECRET_KEY: {app.config['SECRET_KEY']}")
     csrf.init_app(app)
     db.init_app(app)
     app.storage = DBStorage(db)
