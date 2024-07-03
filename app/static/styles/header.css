@@ -22,11 +22,7 @@ header {
   color: #000000;
 }
 
-.navbar a:hover {
-  background-color: #81afff; 
-}
-
-.navbar::selection {
+.navbar a:hover{
   background-color: #81afff; 
 }
 
@@ -35,4 +31,7 @@ header {
 }
 .navbar #profile {
   border: 2px solid #000000;
+}
+.nav_link.active {
+  background-color: #81afff; 
 }

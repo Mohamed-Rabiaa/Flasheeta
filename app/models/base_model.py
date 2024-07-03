@@ -8,7 +8,9 @@ from flask import current_app as app
 
 class BaseModel():
      """ A base class for all Flasheeta models """
-     from app import db
+     from flask import current_app as app
+     db = app.storage.db
+
      id = db.Column(db.String(60), nullable=False, primary_key=True)
      created_at = db.Column(
           db.DateTime,

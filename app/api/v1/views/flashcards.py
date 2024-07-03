@@ -21,10 +21,10 @@ def get_all_flashcards(deck_id):
     return jsonify(flashcards_list), 200
 
 
-@flashcards_view.route('/users/me/decks/<deck_id>/flashcards/<flashcard_id>',
+@flashcards_view.route('/users/me/flashcards/<flashcard_id>',
                        methods=['GET'], strict_slashes=False)
 @login_required
-def get_flashcard(deck_id, flashcard_id):
+def get_flashcard(flashcard_id):
     """
     Retrieves a flashcard by its id
     """
@@ -34,10 +34,10 @@ def get_flashcard(deck_id, flashcard_id):
 
     return jsonify(flashcard.to_dict()), 200
 
-@flashcards_view.route('/users/me/decks/<deck_id>/flashcards/<flashcard_id>',
+@flashcards_view.route('/users/me/flashcards/<flashcard_id>',
                        methods=['DELETE'], strict_slashes=False)
 @login_required
-def delete_flashcard(deck_id, flashcard_id):
+def delete_flashcard(flashcard_id):
     """
     Deletes a flashcard by its id
     """
@@ -46,5 +46,5 @@ def delete_flashcard(deck_id, flashcard_id):
         return jsonify({'error': 'Not Found'}), 404
 
     app.storage.delete(flashcard)
-    app.storag.save()
+    app.storage.save()
     return jsonify({}), 204

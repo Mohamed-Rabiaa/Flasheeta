@@ -17,5 +17,9 @@
 .deck:hover {
   background-color: wheat;
 }
-
+.parent p {
+ font-size: 16px; 
+ line-height: 1.5;
+ margin-top: 100px;
+}
 

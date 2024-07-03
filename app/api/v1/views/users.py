@@ -3,12 +3,13 @@
 
 
 from flask import Blueprint, jsonify
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 users_view = Blueprint('users_view', __name__, url_prefix='/api/v1/') 
 
 
 @users_view.route('/users/me', methods=['GET'], strict_slashes=False)
+@login_required
 def get_current_user():
     """
     Retrieves the current user 

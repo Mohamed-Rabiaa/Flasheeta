@@ -4,22 +4,29 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/header.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/new_flashcard.css') }}">  
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/new_flashcard.css') }}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/new_deck_textfield.js') }}"></script>
+
     <title>Flasheeta</title>
   </head>
   <body>
-    <header>  
+    <header>
       <nav class="navbar">
-	<a id="decks" href="{{ url_for('decks.decks', user_id=current_user.id) }}">Decks</a>
-	<a id="new_flashcard" href="{{ url_for('flashcards.new_flashcard', user_id=current_user.id) }}">New Flashcard</a>
-	<a id="profile" href="{{ url_for('profile.profile', user_id=current_user.id) }}">Profile</a>
+	<a  id="decks" href="{{ url_for('decks.decks', user_id=current_user.id) }}">Decks</a>
+	<a  id="new_flashcard" href="{{ url_for('flashcards.new_flashcard', user_id=current_user.id) }}">New Flashcard</a>
+	<a  id="profile" href="{{ url_for('profile.profile', user_id=current_user.id) }}">Profile</a>
       </nav>
     </header>
-  
+
     <form  method='POST' action="{{ url_for('flashcards.new_flashcard', user_id=current_user.id) }}">
       <div class="form-deck">
 	{{ form.hidden_tag() }}
-	{{ form.deck.label }} {{ form.deck }}
+	{{ form.deck.label }} {{ form.deck(id="deck") }}
+
+	<div class="newDeckField" style="display: none;">
+          <input type="text" name="new_deck_name" id="new_deck_name" placeholder="New Deck">
+	</div>
 	<br>
 	<br>
       </div>
@@ -31,6 +38,7 @@
       <div class="form-back">
 	{{ form.back.label }} {{ form.back }}
       </div>
+     
       <div class="form-actions">
 	{{ form.submit }}
 	</div>

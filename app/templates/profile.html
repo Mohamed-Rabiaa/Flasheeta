@@ -5,6 +5,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/header.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profile.css') }}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
     <title>Flasheeta</title>
 </head>
 
@@ -19,7 +21,7 @@
 
   <div class='profile'>
     <h1>{{ current_user.name }}</h1>
-    <button>Logout</button>
+    <button class='logout'>Logout</button>
   </div>
 
 </html>

@@ -5,6 +5,8 @@ form {
 }
 .form-deck {
   margin-bottom: 30px;
+  display: flex;
+  
 }
 .form-deck select {
   padding: 5px;
@@ -12,6 +14,8 @@ form {
   border: 2px solid #000000;
   border-radius: 5px;
   font-size: 16px;
+  margin-left: auto;
+  margin-right: 10px
 }
 
 .form-front, .form-back {
@@ -49,4 +53,15 @@ form {
 
 .form-actions input[type="submit"]:hover {
   background-color: #52b47a;
+}
+
+.newDeckField {
+  display: flex;
+  margin-right: 5px;
+ 
+}
+.newDeckField input {
+  border: 3px solid;
+  border-radius: 5px;
+  margin-right: 10px;
 }

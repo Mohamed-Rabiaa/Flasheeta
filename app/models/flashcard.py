@@ -3,7 +3,10 @@
 
 
 from app.models.base_model import BaseModel
-from app import db
+# from app import db
+from flask import current_app as app
+
+db = app.storage.db
 
 class Flashcard(BaseModel, db.Model):
     """ This class respresents flashcard in Flasheeta """

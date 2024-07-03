@@ -22,12 +22,13 @@ def create_app():
     csrf.init_app(app)
     db.init_app(app)
     app.storage = DBStorage(db)
-    # storage.reload()
     login_manager.init_app(app)
     migrate.init_app(app, db)
 
     # Register routes
     with app.app_context():
+        # app.storage.reload()
+        db.create_all()
         from app.web_routes import auth_routes, decks_routes, flashcards_routes, profile_routes
         app.register_blueprint(auth_routes.bp)
         app.register_blueprint(decks_routes.bp)
@@ -44,7 +45,6 @@ def create_app():
 
     return app
 
-
 from flask import current_app as app
 
 @login_manager.user_loader
@@ -53,5 +53,10 @@ def load_user(user_id):
     from app.models.user import User
     return app.storage.get(User, user_id)
 
-
-
+'''
+with app.app_context():
+    @app.teardown_appcontext
+    def close_db():
+        """ close_db """
+        app.storage.close()
+'''
