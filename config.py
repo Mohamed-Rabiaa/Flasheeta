@@ -1,7 +1,7 @@
 import os
 import logging
 
-# setting the config for debuging 
+# setting the config for debuging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -13,5 +13,5 @@ logging.basicConfig(level=logging.DEBUG,
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or "Can you guess it?"
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql://flasheeta_dev:flasheeta_pwd@localhost/flasheeta_dev_db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql://Flasheeta:rhsErfw2e6o(>Fe@Flasheeta.mysql.pythonanywhere-services.com/Flasheeta$default'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
