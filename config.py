@@ -13,5 +13,5 @@ logging.basicConfig(level=logging.DEBUG,
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or "Can you guess it?"
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql://Flasheeta:rhsErfw2e6o(>Fe@Flasheeta.mysql.pythonanywhere-services.com/Flasheeta$default'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False

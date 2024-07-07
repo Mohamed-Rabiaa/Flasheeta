@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     // Function to set active link based on current URL
     function setActiveLink() {
-        const currentUrl = window.location.href;
+        const currentUrl = window.location.pathname;
 
         // Remove active class from all nav links
         $('.nav_link').removeClass('active');

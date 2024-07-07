@@ -7,15 +7,15 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/new_flashcard.css') }}">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='scripts/new_deck_textfield.js') }}"></script>
-
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/navbar_link_color.js') }}"></script>
     <title>Flasheeta</title>
   </head>
   <body>
     <header>
       <nav class="navbar">
-	<a  id="decks" href="{{ url_for('decks.decks', user_id=current_user.id) }}">Decks</a>
-	<a  id="new_flashcard" href="{{ url_for('flashcards.new_flashcard', user_id=current_user.id) }}">New Flashcard</a>
-	<a  id="profile" href="{{ url_for('profile.profile', user_id=current_user.id) }}">Profile</a>
+    	<a  id="decks" class='nav_link' href="{{ url_for('decks.decks') }}">Decks</a>
+    	<a  id="new_flashcard" class='nav_link' href="{{ url_for('flashcards.new_flashcard') }}">New Flashcard</a>
+    	<a  id="profile" class='nav_link' href="{{ url_for('profile.profile') }}">Profile</a>
       </nav>
     </header>
 
@@ -38,7 +38,7 @@
       <div class="form-back">
 	{{ form.back.label }} {{ form.back }}
       </div>
-     
+
       <div class="form-actions">
 	{{ form.submit }}
 	</div>
