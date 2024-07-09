@@ -6,7 +6,7 @@ A flashcard web application.
 
 Flasheeta is a flashcard website where users can create flashcards and review them. You can visit the live website [here](https://flasheeta.pythonanywhere.com).
 
-Read the final project blog article (link to be added soon).
+Read the final [project blog article](https://www.linkedin.com/posts/mohamed-rabiaa_the-story-behind-flasheeta-i-am-thrilled-activity-7216388400952578048-Z8uG?utm_source=share&utm_medium=member_desktop).
 
 Connect with me on [LinkedIn](https://www.linkedin.com/in/mohamed-rabiaa/).
 
