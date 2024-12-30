@@ -1,7 +1,12 @@
+const API_BASE_URL = 
+    ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)
+        ? 'http://localhost:5000'
+        : 'https://flasheeta.pythonanywhere.com';
+
 $(document).ready(async function() {
     try {
 	//Getting all decks of the current user
-        const deckData = await $.get('https://flasheeta.pythonanywhere.com/api/v1/users/me/decks');
+        const deckData = await $.get(`${API_BASE_URL}/api/v1/users/me/decks`);
 	if (deckData.length === 0) {
 	     	    $('div.parent').append('<p>You don\'t have any decks yet, Go to the New Flashcard page and add a new deck</p>');
 	}
@@ -24,7 +29,7 @@ $(document).ready(async function() {
                 }
 
                 try {
-                    const flashcards = await $.get(`https://flasheeta.pythonanywhere.com/api/v1/users/me/decks/${deckId}/flashcards`);
+                    const flashcards = await $.get(`${API_BASE_URL}/api/v1/users/me/decks/${deckId}/flashcards`);
                     if (flashcards.length > 0) {
                         let currentFlashcardIndex = 0;
                         let reviewAgainFlashcards = [];
@@ -44,7 +49,7 @@ $(document).ready(async function() {
 
                             const flashcard = flashcards[currentFlashcardIndex];
                             try {
-                                const progress = await $.get(`https://flasheeta.pythonanywhere.com/api/v1/users/me/flashcards/${flashcard.id}/progress`);
+                                const progress = await $.get(`${API_BASE_URL}/api/v1/users/me/flashcards/${flashcard.id}/progress`);
                                 const now = new Date();
                                 const nextReviewDate = new Date(progress['next_review_date']);
 
@@ -96,7 +101,7 @@ $(document).ready(async function() {
 
 				const flashcardId = flashcards[currentFlashcardIndex]['id'];
 				$.ajax({
-                                    url: `https://flasheeta.pythonanywhere.com/api/v1/users/me/flashcards/${flashcardId}`,
+                                    url: `${API_BASE_URL}/api/v1/users/me/flashcards/${flashcardId}`,
                                     type: 'DELETE',
                                     headers: {
 					'X-CSRFToken': getCsrfToken()
@@ -156,12 +161,12 @@ function ratingButtonsHtml() {
 }
 
 function updateProgress(flashcardId, rating) {
-    $.get(`https://flasheeta.pythonanywhere.com/api/v1/users/me/flashcards/${flashcardId}/progress`, function(progress, status) {
+    $.get(`${API_BASE_URL}/api/v1/users/me/flashcards/${flashcardId}/progress`, function(progress, status) {
         if (status === 'success') {
             const updatedProgress = sm2Algorithm(progress, rating);
 
             $.ajax({
-                url: `https://flasheeta.pythonanywhere.com/api/v1/users/me/flashcards/${flashcardId}/progress`,
+                url: `${API_BASE_URL}/api/v1/users/me/flashcards/${flashcardId}/progress`,
                 type: 'PUT',
                 data: JSON.stringify(updatedProgress),
                 contentType: 'application/json; charset=utf-8',

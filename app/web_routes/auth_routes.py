@@ -73,5 +73,3 @@ def logout():
     logout_user()
     get_flashed_messages(with_categories=True)
     return redirect(url_for('auth.login'))
-
-

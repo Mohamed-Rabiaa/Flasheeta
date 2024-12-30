@@ -1,0 +1,21 @@
+services:
+  flasheeta:
+    image: mohamedrabiaa/flasheeta:1.0
+    ports: 
+      - 5000:5000
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      FLASK_APP: ${FLASK_APP}
+      FLASK_RUN_HOST: ${FLASK_RUN_HOST}
+
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PWD}
+      MYSQL_DATABASE: ${DATABASE_NAME}

@@ -1,3 +1,4 @@
-# flask db init
-flask db migrate -m "new migration."
-flask db upgrade
+#!/bin/bash
+docker-compose exec flasheeta flask db init  
+docker-compose exec flasheeta flask db migrate
+docker-compose exec flasheeta flask db upgrade
