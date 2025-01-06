@@ -12,7 +12,7 @@ CORS(app, resources={
         "origins": [
             "http://127.0.0.1:5000", 
             "http://localhost:5000",
-            "https://flasheeta.pythonanywhere.com"
+            "204.216.212.30" # oracle cloud instance public ip address
             ]}})
 
 # Redirect the user to the login page when he request the home page

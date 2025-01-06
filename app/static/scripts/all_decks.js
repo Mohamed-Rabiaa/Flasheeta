@@ -1,7 +1,7 @@
 const API_BASE_URL = 
     ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)
         ? 'http://localhost:5000'
-        : 'https://flasheeta.pythonanywhere.com';
+        : '204.216.212.30'; // oracle cloud instance public ip address
 
 $(document).ready(async function() {
     try {
