@@ -10,9 +10,9 @@ app_host = os.environ.get('FLASK_RUN_HOST')
 CORS(app, resources={
     r"/api/*": {
         "origins": [
-            "http://127.0.0.1:5000", 
+            "http://127.0.0.1:5000",
             "http://localhost:5000",
-            "204.216.212.30" # oracle cloud instance public ip address
+            "http://158.180.238.158:5000" # oracle cloud instance public ip address
             ]}})
 
 # Redirect the user to the login page when he request the home page
