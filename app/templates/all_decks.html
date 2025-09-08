@@ -3,25 +3,23 @@
   <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/header.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/all_decks.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/components.css') }}">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='scripts/all_decks.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='scripts/navbar_link_color.js') }}"></script>
-    <div id="config" data-stylesheet-url="{{ url_for('static', filename='styles/show_flashcard.css') }}"></div>
     <title>Flasheeta</title>
   </head>
-  <body>
+  <body class="layout-main">
 
     <header>
       <nav class="navbar">
-    	<a  id="decks" class='nav_link' href="{{ url_for('decks.decks') }}">Decks</a>
-    	<a  id="new_flashcard" class='nav_link' href="{{ url_for('flashcards.new_flashcard') }}">New Flashcard</a>
-    	<a  id="profile" class='nav_link' href="{{ url_for('profile.profile') }}">Profile</a>
+        <a  id="decks" class='nav_link' href="{{ url_for('decks.decks') }}">Decks</a>
+        <a  id="new_flashcard" class='nav_link' href="{{ url_for('flashcards.new_flashcard') }}">New Flashcard</a>
+        <a  id="profile" class='nav_link' href="{{ url_for('profile.profile') }}">Profile</a>
       </nav>
     </header>
-    <div class="parent">
+    <div class="decks-container">
     </div>
   </body>
 </html>

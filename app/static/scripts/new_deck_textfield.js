@@ -1,15 +1,15 @@
 $(document).ready(function() {
     if ($('#deck').val() === 'new') {
-	$('.newDeckField').show();
+        $('.new-deck-field').show();
     }
 
     $('#deck').change(function() {
         if ($(this).val() === 'new') {
-	    $('.newDeckField').show();
-	    console.log('The new deck text field has been shown');
-	} else {
-            $('.newDeckField').hide();
-	    console.log('The new deck text field has been hiden');
+            $('.new-deck-field').show();
+            console.log('The new deck text field has been shown');
+        } else {
+            $('.new-deck-field').hide();
+            console.log('The new deck text field has been hidden');
         }
     });
 });

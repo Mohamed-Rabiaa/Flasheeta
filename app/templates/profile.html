@@ -2,27 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/header.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/profile.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/components.css') }}">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='scripts/navbar_link_color.js') }}"></script>
     <title>Flasheeta</title>
 </head>
 
-<body>
+<body class="layout-main">
    <header>
       <nav class="navbar">
-    	<a  id="decks" class='nav_link' href="{{ url_for('decks.decks') }}">Decks</a>
-    	<a  id="new_flashcard" class='nav_link' href="{{ url_for('flashcards.new_flashcard') }}">New Flashcard</a>
-    	<a  id="profile" class='nav_link' href="{{ url_for('profile.profile') }}">Profile</a>
-      </nav>
+        <a  id="decks" class='nav_link' href="{{ url_for('decks.decks') }}">Decks</a>
+        <a  id="new_flashcard" class='nav_link' href="{{ url_for('flashcards.new_flashcard') }}">New Flashcard</a>
+        <a  id="profile" class='nav_link' href="{{ url_for('profile.profile') }}">Profile</a>
    </header>
 
-  <div class='profile'>
-    <h1>{{ current_user.name }}</h1>
-    <button class='logout'>Logout</button>
+  <div class='profile-container'>
+    <div class='profile-info'>
+      <h2>{{ current_user.name }}</h2>
+    </div>
+    <div class='profile-actions'>
+      <button class='btn btn-primary logout'>Logout</button>
+    </div>
   </div>
 
+</body>
 </html>
