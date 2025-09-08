@@ -9,26 +9,21 @@ $(document).ready(async function() {
     try {
 	//Getting all decks of the current user
         const deckData = await $.get(`${API_BASE_URL}/api/v1/users/me/decks`);
+        console.log("length of deckData: ", deckData.length);
 	if (deckData.length === 0) {
-	     	    $('div.parent').append('<p>You don\'t have any decks yet, Go to the New Flashcard page and add a new deck</p>');
+	     	    $('div.decks-container').append('<div class="empty-state"><p>You don\'t have any decks yet. Go to the New Flashcard page and add a new deck.</p></div>');
 	}
         for (let i = 0; i < deckData.length; i++) {
             const deckName = deckData[i]['name'];
             const deckId = deckData[i]['id'];
-            const deck = $('<button class="deck"></button>').text(deckName);
+            const deck = $('<button class="deck-card"></button>').text(deckName);
 
-            $('div.parent').append(deck);
+            $('div.decks-container').append(deck);
 
             deck.on('click', async function() {
-		//After clicking on the deck button we clear the decks and show the flashcards of the clicked deck
-                $('div.parent').empty();
+                // After clicking on the deck button we clear the decks and show the flashcards of the clicked deck
+                $('div.decks-container').empty();
                 $('body').append(flashcardHtml());
-
-                const stylesheetUrl = $('#config').data('stylesheet-url');
-                if (!$('link[href="' + stylesheetUrl + '"]').length) {
-                    const link = $('<link rel="stylesheet" type="text/css" href="' + stylesheetUrl + '">');
-                    $('head').append(link);
-                }
 
                 try {
                     const flashcards = await $.get(`${API_BASE_URL}/api/v1/users/me/decks/${deckId}/flashcards`);
@@ -43,8 +38,8 @@ $(document).ready(async function() {
                                     reviewAgainFlashcards = [];
                                     currentFlashcardIndex = 0;
                                 } else {
-                                    $('div.flashcard').remove();
-                                    $('div.parent').append('<p>Congratulations, You have finished all the flashcards in this deck</p>');
+                                    $('div.flashcard-container').remove();
+                                    $('div.decks-container').append('<div class="empty-state"><p>Congratulations! You have finished all the flashcards in this deck.</p></div>');
                                     return;
                                 }
                             }
@@ -85,16 +80,16 @@ $(document).ready(async function() {
                             resetFlashcardView();
                         }
 
-                        $(document).on('click', 'button.again', async function() {
+                        $(document).on('click', 'button.rating-button.again', async function() {
                             await handleRatingClick('again');
                         });
-                        $(document).on('click', 'button.hard', async function() {
+                        $(document).on('click', 'button.rating-button.hard', async function() {
                             await handleRatingClick('hard');
                         });
-                        $(document).on('click', 'button.good', async function() {
+                        $(document).on('click', 'button.rating-button.good', async function() {
                             await handleRatingClick('good');
                         });
-                        $(document).on('click', 'button.easy', async function() {
+                        $(document).on('click', 'button.rating-button.easy', async function() {
                             await handleRatingClick('easy');
                         });
 
@@ -138,26 +133,26 @@ $(document).ready(async function() {
 });
 
 function flashcardHtml() {
-    const html = "<div class='flashcard'> \
-<div class='info'> \
-<p class='question'></p> \
+    const html = "<div class='flashcard-container'> \
+<div class='flashcard-content'> \
+<p class='flashcard-question'></p> \
 </div> \
-<div class='actions'> \
-<button class='edit'>Edit</button> \
-<button class='show_answer'>Show Answer</button> \
-<button class='delete'>Delete</button> \
+<div class='flashcard-actions'> \
+<button class='flashcard-button edit'>Edit</button> \
+<button class='flashcard-button show-answer'>Show Answer</button> \
+<button class='flashcard-button delete'>Delete</button> \
 </div> \
-<div class='rating'> \
+<div class='rating-container'> \
 </div> \
 </div>";
     return html;
 }
 
 function ratingButtonsHtml() {
-    const html = '<button class="again">Again</button> \
-<button class="hard">Hard</button> \
-<button class="good">Good</button> \
-<button class="easy">Easy</button> \
+    const html = '<button class="rating-button again">Again</button> \
+<button class="rating-button hard">Hard</button> \
+<button class="rating-button good">Good</button> \
+<button class="rating-button easy">Easy</button> \
 ';
     return html;
 }
@@ -258,24 +253,24 @@ function getCsrfToken() {
 }
 
 function showFlashcard(flashcard) {
-    $('p.question').text(flashcard['question']);
+    $('p.flashcard-question').text(flashcard['question']);
 
-    $('button.show_answer').one('click', function() {
-        $('p.question').css('border-bottom', '3px solid');
-        $('div.info').append('<p class="answer"></p>');
-        $('p.answer').text(flashcard['answer']);
+    $('button.show-answer').one('click', function() {
+        $('p.flashcard-question').css('border-bottom', '3px solid');
+        $('div.flashcard-content').append('<p class="flashcard-answer"></p>');
+        $('p.flashcard-answer').text(flashcard['answer']);
 
-        if (!$('div.flashcard').has('div.rating').length) {
-            $('div.flashcard').append('<div class="rating"></div>');
+        if (!$('div.flashcard-container').has('div.rating-container').length) {
+            $('div.flashcard-container').append('<div class="rating-container"></div>');
         }
-        if ($('div.rating').children().length === 0) {
-            $('div.rating').append(ratingButtonsHtml());
+        if ($('div.rating-container').children().length === 0) {
+            $('div.rating-container').append(ratingButtonsHtml());
         }
     });
 }
 
 function resetFlashcardView() {
-    $('p.question').css('border-bottom', '');
-    $('p.answer').remove();
-    $('div.rating').remove();
+    $('p.flashcard-question').css('border-bottom', '');
+    $('p.flashcard-answer').remove();
+    $('div.rating-container').remove();
 }

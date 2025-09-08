@@ -6,19 +6,30 @@ This module defines the User class.
 from app.models.base_model import BaseModel
 from flask_login import UserMixin
 from flask import current_app as app
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = app.storage.db
 
-class User(BaseModel, db.Model, UserMixin):
+class User(BaseModel, UserMixin, db.Model):
     """
-    This class represents a user in Flasheeta.
+    Represents a user in the Flasheeta application.
 
     Attributes:
-        name (str): The name of the user, which is unique.
-        decks (relationship): A relationship to the Deck model, representing decks owned by the user.
+        name (str): Unique username of the user.
+        password_hash (str): Hashed password for authentication.
+        decks (relationship): Relationship to Deck objects owned by the user.
     """
     __tablename__ = 'users'
     name = db.Column(db.String(128), nullable=False, unique=True)
+    password_hash = db.Column(db.String(255), nullable=False)
 
     from app.models.deck import Deck
     decks = db.relationship('Deck', backref='user', cascade="all, delete-orphan")
+
+    def set_password(self, password):
+        """Hash and set the user's password."""
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        """Check if the provided password matches the stored hash."""
+        return check_password_hash(self.password_hash, password)

@@ -26,17 +26,20 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         username = form.username.data
+        password = form.password.data
+        
+        # Check if username already exists
         old_user = User.query.filter_by(name=username).first()
         if old_user:
             flash('This username is already taken. Please choose a new one.')
-        else:
-            user = User(name=username)
-            user.save()
-            login_user(user)
-            return redirect(url_for('decks.decks', user_id=user.id))
-    else:
-        if form.is_submitted():
-            flash('Invalid username')
+            return render_template('register.html', form=form)
+        
+        # Create new user with hashed password
+        user = User(name=username)
+        user.set_password(password)
+        user.save()
+        login_user(user)
+        return redirect(url_for('decks.decks', user_id=user.id))
 
     return render_template('register.html', form=form)
 
@@ -52,12 +55,14 @@ def login():
 
     if form.validate_on_submit():
         username = form.username.data
+        password = form.password.data  # You'll need to add this field to LoginForm
+        
         user = User.query.filter_by(name=username).first()
-        if user:
+        if user and user.check_password(password):
             login_user(user)
             return redirect(url_for('decks.decks'))
         else:
-            flash('Invalid username')
+            flash('Invalid username or password')
 
     return render_template('login.html', form=form)
 

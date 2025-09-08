@@ -1,0 +1,154 @@
+/* ==========================================================================
+   MAIN STYLESHEET - Base styles, layout, and common elements
+   ========================================================================== */
+
+/* CSS Variables for consistent theming */
+:root {
+  --primary-color: #81afff;
+  --success-color: #63cf94;
+  --success-hover: #52b47a;
+  --border-color: #000000;
+  --background-light: #d9e2ff;
+  --text-color: #000000;
+  --white: #ffffff;
+  --light-gray: #f5f5f5;
+  --border-radius: 5px;
+  --border-width: 3px;
+  --transition: all 0.3s ease;
+}
+
+/* Reset and Base Styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  color: var(--text-color);
+}
+
+/* Layout Classes */
+.layout-auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  background-color: var(--primary-color);
+}
+
+.layout-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 70px;
+}
+
+/* Header Styles */
+header {
+  height: 70px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: var(--white);
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.navbar a {
+  padding: 0 20px;
+  border-top: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
+  text-decoration: none;
+  color: var(--text-color);
+  transition: var(--transition);
+}
+
+.navbar a:hover {
+  background-color: var(--primary-color);
+}
+
+.navbar #decks,
+.navbar #profile {
+  border: 2px solid var(--border-color);
+}
+
+.nav_link.active {
+  background-color: var(--primary-color);
+}
+
+/* Button Base Styles */
+.btn {
+  padding: 5px 20px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 16px;
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: var(--success-color);
+  color: var(--text-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--success-hover);
+}
+
+.btn-secondary {
+  background-color: var(--light-gray);
+  color: var(--text-color);
+}
+
+.btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.margin-top-50 {
+  margin-top: 50px;
+}
+
+.margin-top-100 {
+  margin-top: 100px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+/* Common Text Styles */
+.text-large {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.text-medium {
+  font-size: 16px;
+  line-height: 1.5;
+}
