@@ -5,13 +5,14 @@ from flask import Blueprint, jsonify, request, current_app as app
 from flask_login import login_required
 from app.models.progress import Progress
 from app.models.flashcard import Flashcard
-from app import db
+from app import db, csrf
 from datetime import datetime
 
 progress_view = Blueprint('progress_view', __name__, url_prefix='/api/v1/') 
 
 @progress_view.route('/users/me/decks/<deck_id>/flashcards/progress', methods=['GET'],
                      strict_slashes=False)
+@csrf.exempt
 @login_required
 def get_flashcards_progress(deck_id):
     """
@@ -36,6 +37,7 @@ def get_flashcards_progress(deck_id):
 
 @progress_view.route('/users/me/flashcards/<flashcard_id>/progress', methods=['GET'],
                      strict_slashes=False)
+@csrf.exempt
 @login_required
 def get_flashcard_progress(flashcard_id):
     """

@@ -49,8 +49,20 @@ class BaseModel():
             dict: A dictionary representation of the instance.
         """
         dct = self.__dict__.copy()
-        dct['created_at'] = dct.get('created_at').isoformat()
-        dct['updated_at'] = dct.get('updated_at').isoformat()
+        
+        # Handle created_at field
+        created_at = dct.get('created_at')
+        if created_at is not None:
+            dct['created_at'] = created_at.isoformat()
+        else:
+            dct['created_at'] = None
+            
+        # Handle updated_at field
+        updated_at = dct.get('updated_at')
+        if updated_at is not None:
+            dct['updated_at'] = updated_at.isoformat()
+        else:
+            dct['updated_at'] = None
 
         if '__class__' in dct:
             del dct['__class__']

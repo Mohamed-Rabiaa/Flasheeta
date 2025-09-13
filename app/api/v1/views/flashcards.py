@@ -4,12 +4,13 @@
 from flask import Blueprint, jsonify, current_app as app
 from flask_login import login_required, current_user
 from app.models.flashcard import Flashcard
-from app import db
+from app import db, csrf
 
 flashcards_view = Blueprint('flashcards_view', __name__, url_prefix='/api/v1/') 
 
 @flashcards_view.route('/users/me/decks/<deck_id>/flashcards', methods=['GET'],
                        strict_slashes=False)
+@csrf.exempt
 @login_required
 def get_all_flashcards(deck_id):
     """
@@ -28,6 +29,7 @@ def get_all_flashcards(deck_id):
 
 @flashcards_view.route('/users/me/flashcards/<flashcard_id>',
                        methods=['GET'], strict_slashes=False)
+@csrf.exempt
 @login_required
 def get_flashcard(flashcard_id):
     """

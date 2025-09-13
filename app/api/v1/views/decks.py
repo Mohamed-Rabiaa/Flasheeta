@@ -5,12 +5,13 @@
 from flask import Blueprint, jsonify
 from flask_login import login_required, current_user
 from app.models.deck import Deck
-from app import db
+from app import db, csrf
 
 decks_view = Blueprint('decks_view', __name__, url_prefix='/api/v1/')
 
 @decks_view.route('/users/me/decks', methods=['GET'],
                   strict_slashes=False)
+@csrf.exempt
 @login_required
 def get_all_decks():
     """
