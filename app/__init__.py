@@ -22,6 +22,12 @@ def create_app():
     db.init_app(app)
     app.storage = DBStorage(db)
     login_manager.init_app(app)
+    
+    # Configure Flask-Login
+    login_manager.login_view = 'auth.login'
+    login_manager.login_message = 'Please log in to access this page.'
+    login_manager.login_message_category = 'info'
+    
     migrate.init_app(app, db)
 
     with app.app_context():

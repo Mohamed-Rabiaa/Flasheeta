@@ -13,7 +13,9 @@ CORS(app, resources={
             "http://127.0.0.1:5000",
             "http://localhost:5000",
             "http://158.180.238.158:5000" # oracle cloud instance public ip address
-            ]}})
+        ],
+        "supports_credentials": True
+    }})
 
 # Redirect the user to the login page when he request the home page
 @app.route('/')

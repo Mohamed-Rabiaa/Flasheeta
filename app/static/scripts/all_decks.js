@@ -1,11 +1,19 @@
+// Use relative URLs to avoid cross-origin issues
 const API_BASE_URL = 
     ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)
-        ? 'http://localhost:5000'
+        ? '' // Use relative URLs for local development
         : 'http://158.180.238.158:5000'; // oracle cloud instance public ip address
 
 console.log(API_BASE_URL);
 
 $(document).ready(async function() {
+    // Configure jQuery to send cookies with AJAX requests
+    $.ajaxSetup({
+        xhrFields: {
+            withCredentials: true
+        }
+    });
+    
     try {
 	//Getting all decks of the current user
         const deckData = await $.get(`${API_BASE_URL}/api/v1/users/me/decks`);
@@ -160,7 +168,16 @@ function ratingButtonsHtml() {
 function updateProgress(flashcardId, rating) {
     $.get(`${API_BASE_URL}/api/v1/users/me/flashcards/${flashcardId}/progress`, function(progress, status) {
         if (status === 'success') {
-            const updatedProgress = sm2Algorithm(progress, rating);
+            // Validate and ensure progress has all required fields
+            const validatedProgress = validateProgress(progress);
+            
+            // Apply improved SM2 algorithm
+            const updatedProgress = sm2Algorithm(validatedProgress, rating);
+            
+            // Display user feedback
+            const nextReview = getNextReviewDescription(updatedProgress.next_review_date);
+            const stats = calculateLearningStats(updatedProgress);
+            console.log(`Progress updated! Next review: ${nextReview}. Stats: ${stats.accuracy} accuracy, ${stats.reviews} reviews`);
 
             $.ajax({
                 url: `${API_BASE_URL}/api/v1/users/me/flashcards/${flashcardId}/progress`,
@@ -173,79 +190,17 @@ function updateProgress(flashcardId, rating) {
                 },
                 success: function(response) {
                     console.log('Update successful:', response);
+                    // Could add UI feedback here showing the next review time
                 },
                 error: function(xhr, status, error) {
                     console.error('Update failed:', error);
+                    console.error('Response:', xhr.responseText);
                 }
             });
         }
+    }).fail(function(xhr, status, error) {
+        console.error('Failed to get current progress:', error);
     });
-}
-
-//Spaced repetition algorithm
-function sm2Algorithm(progress, rating) {
-    let { review_count, correct_count, ease_factor, interval, last_review_date } = progress;
-
-    last_review_date = new Date(last_review_date);
-
-    const ratings = {
-        again: 0,
-        hard: 3,
-        good: 4,
-        easy: 5
-    };
-
-    const q = ratings[rating];
-
-    if (q < 4) {
-	if (q === 0) {
-            interval = 1;
-	}
-	if (q === 3) {
-	    interval = 2;
-	}
-    } else {
-        if (review_count === 0) {
-            interval = 1;
-        } else if (review_count === 1) {
-            interval = 6;
-        } else {
-	    if (q === 4) {
-                interval *= 1.2;
-	    }
-	    else {
-		interval *= ease_factor;
-	    }
-        }
-
-        ease_factor = ease_factor + 0.1 - (5 - q) * (0.08 + (5 - q) * 0.02);
-
-        if (ease_factor < 1.3) {
-            ease_factor = 1.3;
-        }
-    }
-
-    review_count++;
-    if (q > 2) {
-        correct_count++;
-    }
-
-    let next_review_date = new Date(last_review_date);
-    if (q <= 3) {
-	next_review_date.setMinutes(next_review_date.getMinutes() + interval); // Add interval in minutes
-    }
-    else {
-	next_review_date.setDate(next_review_date.getDate() + interval); // Add interval in days
-    }
-    console.log(next_review_date);
-
-    return {
-        review_count,
-        correct_count,
-        ease_factor,
-        interval,
-        next_review_date
-    };
 }
 
 function getCsrfToken() {
