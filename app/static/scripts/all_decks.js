@@ -38,14 +38,34 @@ $(document).ready(async function() {
                     if (flashcards.length > 0) {
                         let currentFlashcardIndex = 0;
                         let reviewAgainFlashcards = [];
+                        
+                        // Track cards that should be reviewed immediately (bypassing date check)
+                        let immediateReviewCards = new Set();
 
                         async function showNextFlashcard() {
+                            // If we've reached the end of current cards
                             if (currentFlashcardIndex >= flashcards.length) {
-                                if (reviewAgainFlashcards.length > 0) {
+                                // Check if there are immediate review cards to show
+                                if (immediateReviewCards.size > 0) {
+                                    console.log(`All regular cards done. Now showing ${immediateReviewCards.size} immediate review cards.`);
+                                    
+                                    // Add immediate review cards back to the deck
+                                    const immediateCards = reviewAgainFlashcards.filter(card => immediateReviewCards.has(card.id));
+                                    flashcards.push(...immediateCards);
+                                    
+                                    // Remove these cards from reviewAgainFlashcards
+                                    reviewAgainFlashcards = reviewAgainFlashcards.filter(card => !immediateReviewCards.has(card.id));
+                                    
+                                    currentFlashcardIndex = 0;
+                                    console.log(`Added ${immediateCards.length} immediate review cards to deck`);
+                                } else if (reviewAgainFlashcards.length > 0) {
+                                    // Add remaining failed cards back to the deck for review
                                     flashcards.push(...reviewAgainFlashcards);
                                     reviewAgainFlashcards = [];
                                     currentFlashcardIndex = 0;
+                                    console.log(`Added ${flashcards.length - currentFlashcardIndex} failed cards back for review`);
                                 } else {
+                                    // All cards completed successfully
                                     $('div.flashcard-container').remove();
                                     $('div.decks-container').append('<div class="empty-state"><p>Congratulations! You have finished all the flashcards in this deck.</p></div>');
                                     return;
@@ -53,6 +73,15 @@ $(document).ready(async function() {
                             }
 
                             const flashcard = flashcards[currentFlashcardIndex];
+                            
+                            // Check if this card is marked for immediate review (only show at end of deck)
+                            if (immediateReviewCards.has(flashcard.id)) {
+                                console.log(`Showing immediate review card: ${flashcard.id}`);
+                                immediateReviewCards.delete(flashcard.id);
+                                showFlashcard(flashcard);
+                                return;
+                            }
+                            
                             try {
                                 const progress = await $.get(`${API_BASE_URL}/api/v1/users/me/flashcards/${flashcard.id}/progress`);
                                 const now = new Date();
@@ -62,6 +91,7 @@ $(document).ready(async function() {
                                     showFlashcard(flashcard);
                                     return;
                                 } else {
+                                    console.log(`Skipping card ${flashcard.id} - not due yet (due: ${nextReviewDate.toLocaleString()})`);
                                     currentFlashcardIndex++;
                                     await showNextFlashcard();
                                 }
@@ -77,13 +107,28 @@ $(document).ready(async function() {
                         async function handleRatingClick(rating) {
                             const flashcardId = flashcards[currentFlashcardIndex]['id'];
                             await updateProgress(flashcardId, rating);
+                            
                             if (rating === 'again' || rating === 'hard') {
-                                reviewAgainFlashcards.push(flashcards[currentFlashcardIndex]);
-				flashcards.splice(currentFlashcardIndex, 1);
-				flashcards.push(flashcards[currentFlashcardIndex]);
+                                // Save reference to the current failed card
+                                const failedCard = flashcards[currentFlashcardIndex];
+                                
+                                // Add it to the review queue for end-of-deck review
+                                reviewAgainFlashcards.push(failedCard);
+                                console.log(`Card marked for review again. Queue length: ${reviewAgainFlashcards.length}`);
+                                
+                                // Mark this card for immediate review (bypass date check when shown at end)
+                                immediateReviewCards.add(failedCard.id);
+                                console.log(`Card ${failedCard.id} added to immediate review queue (will show after all regular cards)`);
+                                
+                                // Just move to the next card (don't re-insert)
+                                currentFlashcardIndex++;
+                                console.log(`Moving to next card. Failed card will be reviewed at end of deck.`);
                             } else {
-				currentFlashcardIndex++;
-			    }
+                                // For good/easy cards, just move to the next one
+                                currentFlashcardIndex++;
+                                console.log(`Card completed successfully. Moving to next card.`);
+                            }
+                            
                             await showNextFlashcard();
                             resetFlashcardView();
                         }

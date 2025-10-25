@@ -1,15 +1,23 @@
 /**
- * Enhanced Spaced Repetition Algorithm (Improved SM2)
+ * Hybrid Spaced Repetition Algorithm
  * 
- * This file contains the SM2 spaced repetition algorithm implementation
- * and related helper functions for optimal learning scheduling.
+ * Combines fixed intervals for failed reviews with adaptive SM2 for successful reviews.
+ * This provides immediate reinforcement when struggling while optimizing long-term retention.
+ * 
+ * Fixed Intervals (for failed cards):
+ * - Again: 10 minutes (immediate same-session review)
+ * - Hard: 15 minutes (quick same-session review)
+ * 
+ * Adaptive SM2 (for successful cards):
+ * - Good: Progressive intervals based on performance
+ * - Easy: Accelerated progression for well-known cards
  * 
  * @author Flasheeta Development Team
- * @version 2.0
+ * @version 3.0 - Hybrid Approach
  */
 
 /**
- * Enhanced SM2 Algorithm Implementation
+ * Hybrid Algorithm Implementation
  * 
  * @param {Object} progress - Current progress object containing review history
  * @param {string} rating - User's difficulty rating ('again', 'hard', 'good', 'easy')
@@ -51,44 +59,60 @@ function sm2Algorithm(progress, rating) {
         correct_count++;
     }
 
-    // Standard SM2 Algorithm Implementation
+    // Hybrid approach: Fixed intervals for failed cards, SM2 for successful cards
     if (quality < 3) {
-        // Failed recall - reset to beginning with 1 day interval
-        interval = 1;
-        ease_factor = Math.max(1.3, ease_factor - 0.2);
+        // FAILED CARDS - Use fixed short intervals for same-session review
+        const fixedFailedIntervals = {
+            0: 10 / (24 * 60),      // again: 10 minutes (immediate review)
+            2: 15 / (24 * 60)       // hard: 15 minutes (quick review)
+        };
+        
+        interval = fixedFailedIntervals[quality];
+        ease_factor = Math.max(1.3, ease_factor - 0.2); // Reduce ease factor
+        
     } else {
-        // Successful recall - calculate new interval
+        // SUCCESSFUL CARDS - Use adaptive SM2 algorithm
         if (review_count === 1) {
-            interval = 1;
+            // First successful review
+            interval = 1; // 1 day
         } else if (review_count === 2) {
-            interval = 6;
+            // Second successful review
+            interval = 6; // 6 days
         } else {
-            // Apply ease factor with quality-based multiplier
+            // Subsequent reviews - apply ease factor with quality-based multiplier
             const qualityMultiplier = {
-                2: 0.85, // Hard: slower progression
                 3: 1.0,  // Good: normal progression
-                5: 1.3   // Easy: accelerated progression
+                5: 1.3   // Easy: 30% faster progression
             }[quality] || 1.0;
             
             interval = Math.round(interval * ease_factor * qualityMultiplier);
         }
 
-        // Standard SM2 ease factor calculation
+        // Update ease factor based on performance (SM2 formula)
         ease_factor = ease_factor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
     }
 
     // Apply bounds to ease factor
     ease_factor = Math.max(1.3, Math.min(ease_factor, 2.5));
     
-    // Apply bounds to interval
-    interval = Math.max(1, Math.min(interval, 365)); // Max 1 year
+    // Apply bounds to interval (allow fractional days for short intervals)
+    interval = Math.max(10 / (24 * 60), Math.min(interval, 365)); // Min 10 minutes, Max 1 year
 
-    // Calculate next review date using consistent day-based intervals
+    // Calculate next review date - handle fractional days
     let next_review_date = new Date(current_time);
-    next_review_date.setDate(next_review_date.getDate() + interval);
+    // Convert interval to milliseconds (interval is in days, can be fractional)
+    const intervalMs = interval * 24 * 60 * 60 * 1000;
+    next_review_date = new Date(current_time.getTime() + intervalMs);
 
     // Log for debugging (can be removed in production)
-    console.log(`SM2 Update: Rating=${rating}, Quality=${quality}, Interval=${interval}, EF=${ease_factor.toFixed(2)}, Next=${next_review_date.toISOString()}`);
+    const intervalDisplay = interval < 1 
+        ? `${Math.round(interval * 24 * 60)} minutes` 
+        : interval === 1 
+            ? `${interval} day` 
+            : `${interval} days`;
+    
+    const algorithmType = quality < 3 ? 'Fixed' : 'SM2';
+    console.log(`${algorithmType} Interval: Rating=${rating}, Interval=${intervalDisplay}, EF=${ease_factor.toFixed(2)}, Reviews=${review_count}, Next=${next_review_date.toISOString()}`);
 
     return {
         review_count,
