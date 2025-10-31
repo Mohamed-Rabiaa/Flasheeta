@@ -47,6 +47,7 @@ def register():
 def login():
     """
     Displays the login page and logs the user in if the form is validated.
+    Clears any stale flash messages on GET requests.
 
     Returns:
         render_template: Renders 'login.html' template with the LoginForm object.
@@ -55,7 +56,7 @@ def login():
 
     if form.validate_on_submit():
         username = form.username.data
-        password = form.password.data  # You'll need to add this field to LoginForm
+        password = form.password.data
         
         user = User.query.filter_by(name=username).first()
         if user and user.check_password(password):
@@ -63,6 +64,10 @@ def login():
             return redirect(url_for('decks.decks'))
         else:
             flash('Invalid username or password')
+    else:
+        # Clear any stale flash messages when displaying the login form (GET request)
+        if request.method == 'GET':
+            get_flashed_messages()
 
     return render_template('login.html', form=form)
 
@@ -71,10 +76,12 @@ def login():
 def logout():
     """
     Logs out the current user and redirects to the login page.
+    Clears any existing flash messages before logout.
 
     Returns:
         redirect: Redirects to the 'login' route.
     """
+    # Clear all flash messages before logout
+    get_flashed_messages()
     logout_user()
-    get_flashed_messages(with_categories=True)
     return redirect(url_for('auth.login'))
