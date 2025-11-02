@@ -167,7 +167,13 @@ class ReviewSession {
             await FlashcardAPI.deleteFlashcard(flashcard.id);
             console.log(`Flashcard ${flashcard.id} deleted successfully`);
             
-            this.manager.moveToNext();
+            // Remove card from manager (doesn't increment index)
+            this.manager.removeCurrentFlashcard();
+            
+            // Reset UI to clear any stale data
+            UIManager.resetFlashcardView();
+            
+            // Show next card
             await this.showNextFlashcard();
             
         } catch (error) {

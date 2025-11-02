@@ -75,6 +75,29 @@ class FlashcardManager {
     }
 
     /**
+     * Remove current flashcard from deck (used when deleting)
+     */
+    removeCurrentFlashcard() {
+        const currentCard = this.getCurrentFlashcard();
+        if (!currentCard) return;
+
+        // Remove from main flashcards array
+        this.flashcards.splice(this.currentIndex, 1);
+        
+        // Remove from review queues if present
+        this.reviewAgainFlashcards = this.reviewAgainFlashcards.filter(
+            card => card.id !== currentCard.id
+        );
+        this.immediateReviewCards.delete(currentCard.id);
+        
+        if (CONFIG.DEBUG) {
+            console.log(`Removed card ${currentCard.id} from deck. Remaining: ${this.flashcards.length} cards`);
+        }
+        
+        // Don't increment index - next card is now at current position
+    }
+
+    /**
      * Handle end of deck - add failed cards back for review
      * @returns {boolean} True if cards were added, false if session is complete
      */

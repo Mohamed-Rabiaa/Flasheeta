@@ -102,9 +102,12 @@ class UIManager {
      * Reset flashcard view for next card
      */
     static resetFlashcardView() {
-        $('p.flashcard-question').css('border-bottom', '');
+        $('p.flashcard-question').css('border-bottom', '').text('');
         $('p.flashcard-answer').remove();
         $('div.rating-container').remove();
+        
+        // Re-enable the show-answer button (remove any existing handlers)
+        $('button.show-answer').off('click');
     }
 
     /**
