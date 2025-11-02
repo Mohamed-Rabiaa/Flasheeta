@@ -7,6 +7,7 @@ from flask import current_app as app, render_template, Blueprint
 from flask_login import login_required, current_user
 from app.models.deck import Deck
 from app.models.user import User
+from app.services.deck_service import DeckService
 
 bp = Blueprint('decks', __name__)
 

@@ -5,6 +5,7 @@
 from flask import Blueprint, jsonify
 from flask_login import login_required, current_user
 from app.models.deck import Deck
+from app.services.deck_service import DeckService
 from app import db, csrf
 
 decks_view = Blueprint('decks_view', __name__, url_prefix='/api/v1/')
@@ -20,6 +21,6 @@ def get_all_decks():
     Returns:
     tuple: A tuple containing a JSON response with a list of decks and an HTTP status code 200.
     """
-    decks_objs = db.session.query(Deck).filter_by(user_id=current_user.id).all()
+    decks_objs = DeckService.get_decks_by_user(current_user.id)
     decks_list = [deck.to_dict() for deck in decks_objs]
     return jsonify(decks_list), 200

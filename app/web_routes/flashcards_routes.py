@@ -10,6 +10,8 @@ from app.models.deck import Deck
 from app.models.user import User
 from app.models.flashcard import Flashcard
 from app.models.progress import Progress
+from app.services.flashcard_service import FlashcardService
+from app.services.deck_service import DeckService
 from flask_login import login_required, current_user
 from datetime import datetime
 
@@ -27,7 +29,7 @@ def new_flashcard():
     """
     from app.forms.new_flashcard_form import NewFlashcardForm
     form = NewFlashcardForm()
-    decks_list = Deck.query.filter_by(user_id=current_user.id).order_by(Deck.name)
+    decks_list = DeckService.get_decks_by_user(current_user.id)
     form.deck.choices = [(deck.id, deck.name) for deck in decks_list]
     form.deck.choices.append(('new', 'Add new Deck'))
 
@@ -36,9 +38,12 @@ def new_flashcard():
         if selected_deck == 'new':
             deck_name = request.form.get('new_deck_name')
             if deck_name:
-                new_deck = Deck(name=deck_name, user_id=current_user.id)
-                new_deck.save()
-                deck_id = new_deck.id
+                try:
+                    new_deck = DeckService.create_deck(deck_name, current_user.id)
+                    deck_id = new_deck.id
+                except ValueError as e:
+                    flash(str(e))
+                    return redirect(url_for('flashcards.new_flashcard'))
             else:
                 flash('New deck name is required')
                 return redirect(url_for('flashcards.new_flashcard'))
@@ -48,14 +53,12 @@ def new_flashcard():
         question = form.front.data or ""
         answer = form.back.data or ""
 
-        flashcard = Flashcard(question=question, answer=answer, deck_id=deck_id)
-        flashcard.save()
-
-        progress = Progress(review_count=0, correct_count=0,
-                            flashcard_id=flashcard.id, last_review_date=datetime.utcnow())
-        progress.save()
-
-        flash('New flashcard added successfully!')
+        try:
+            FlashcardService.create_flashcard(question, answer, deck_id)
+            flash('New flashcard added successfully!')
+        except ValueError as e:
+            flash(str(e))
+        
         return redirect(url_for('flashcards.new_flashcard'))
 
     return render_template('new_flashcard.html', form=form)
@@ -76,11 +79,14 @@ def edit_flashcard(flashcard_id):
     """
     from app.forms.edit_flashcard_form import EditFlashcardForm
     form = EditFlashcardForm()
-    decks_list = Deck.query.filter_by(user_id=current_user.id).order_by(Deck.name)
+    decks_list = DeckService.get_decks_by_user(current_user.id)
     form.deck.choices = [(deck.id, deck.name) for deck in decks_list]
     form.deck.choices.append(('new', 'Add new Deck'))
 
-    flashcard = app.storage.get(Flashcard, flashcard_id)
+    flashcard = FlashcardService.get_flashcard_by_id(flashcard_id)
+    if not flashcard:
+        flash('Flashcard not found')
+        return redirect(url_for('decks.decks'))
 
     if request.method == 'GET':
         form.deck.default = flashcard.deck_id
@@ -95,21 +101,29 @@ def edit_flashcard(flashcard_id):
         if selected_deck == 'new':
             deck_name = request.form.get('new_deck_name')
             if deck_name:
-                new_deck = Deck(name=deck_name, user_id=current_user.id)
-                new_deck.save()
-                deck_id = new_deck.id
+                try:
+                    new_deck = DeckService.create_deck(deck_name, current_user.id)
+                    deck_id = new_deck.id
+                except ValueError as e:
+                    flash(str(e))
+                    return redirect(url_for('flashcards.new_flashcard'))
             else:
                 flash('New deck name is required')
                 return redirect(url_for('flashcards.new_flashcard'))
         else:
             deck_id = selected_deck
 
-        flashcard.question = form.front.data or ""
-        flashcard.answer = form.back.data or ""
-        flashcard.deck_id = deck_id
-        flashcard.save()
-
-        flash('Flashcard updated successfully!')
+        try:
+            FlashcardService.update_flashcard(
+                flashcard_id,
+                form.front.data or "",
+                form.back.data or "",
+                deck_id
+            )
+            flash('Flashcard updated successfully!')
+        except ValueError as e:
+            flash(str(e))
+        
         return redirect(url_for('decks.decks'))
 
     return render_template('edit_flashcard.html', form=form, flashcard_id=flashcard_id)

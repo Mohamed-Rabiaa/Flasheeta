@@ -4,6 +4,7 @@
 from flask import Blueprint, jsonify, current_app as app
 from flask_login import login_required, current_user
 from app.models.flashcard import Flashcard
+from app.services.flashcard_service import FlashcardService
 from app import db, csrf
 
 flashcards_view = Blueprint('flashcards_view', __name__, url_prefix='/api/v1/') 
@@ -22,7 +23,7 @@ def get_all_flashcards(deck_id):
     Returns:
         tuple: A tuple containing a JSON response with a list of flashcards and an HTTP status code 200.
     """
-    flashcards_objs = db.session.query(Flashcard).filter_by(deck_id=deck_id).all()
+    flashcards_objs = FlashcardService.get_flashcards_by_deck(deck_id)
     flashcards_list = [flashcard.to_dict() for flashcard in flashcards_objs]
     return jsonify(flashcards_list), 200
 
@@ -42,7 +43,7 @@ def get_flashcard(flashcard_id):
         tuple: A tuple containing a JSON response with the flashcard data and an HTTP status code 200 if found,
                or a JSON response with an error message and HTTP status code 404 if not found.
     """
-    flashcard = app.storage.get(Flashcard, flashcard_id)
+    flashcard = FlashcardService.get_flashcard_by_id(flashcard_id)
     if not flashcard:
         return jsonify({'error': 'Not Found'}), 404
 
@@ -63,10 +64,7 @@ def delete_flashcard(flashcard_id):
         tuple: An empty JSON response and HTTP status code 204 if deletion is successful,
                or a JSON response with an error message and HTTP status code 404 if the flashcard is not found.
     """
-    flashcard = app.storage.get(Flashcard, flashcard_id)
-    if not flashcard:
+    if not FlashcardService.delete_flashcard(flashcard_id):
         return jsonify({'error': 'Not Found'}), 404
 
-    app.storage.delete(flashcard)
-    app.storage.save()
     return jsonify({}), 204
