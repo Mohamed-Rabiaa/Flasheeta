@@ -111,6 +111,13 @@ class FlashcardAPI {
             }
         } catch (error) {
             console.error(`Failed to delete flashcard ${flashcardId}:`, error);
+            // Log more details about the error
+            if (error.responseJSON) {
+                console.error('Error response:', error.responseJSON);
+            } else if (error.responseText) {
+                console.error('Error text:', error.responseText);
+            }
+            console.error('Status:', error.status, 'Status Text:', error.statusText);
             throw error;
         }
     }

@@ -9,6 +9,7 @@ from typing import List, Optional, Dict
 from app.models.flashcard import Flashcard
 from app.models.progress import Progress
 from app.models.deck import Deck
+from app.exceptions import ValidationError, NotFoundError
 from flask import current_app as app
 
 
@@ -33,9 +34,9 @@ class FlashcardService:
         """
         # Validate inputs
         if not question or not question.strip():
-            raise ValueError("Question cannot be empty")
+            raise ValidationError("Question cannot be empty")
         if not answer or not answer.strip():
-            raise ValueError("Answer cannot be empty")
+            raise ValidationError("Answer cannot be empty")
         
         # Create flashcard
         flashcard = Flashcard(
@@ -137,10 +138,7 @@ class FlashcardService:
         if not flashcard:
             return False
         
-        # Delete associated progress (cascade should handle this, but being explicit)
-        if flashcard.progress:
-            app.storage.delete(flashcard.progress)
-        
+        # Delete flashcard (cascade will automatically delete associated progress)
         app.storage.delete(flashcard)
         app.storage.save()
         return True

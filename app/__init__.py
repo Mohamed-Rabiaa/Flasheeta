@@ -48,6 +48,10 @@ def create_app():
         app.register_blueprint(decks.decks_view)
         app.register_blueprint(flashcards.flashcards_view)
         app.register_blueprint(progress.progress_view)
+        
+        # Register error handlers
+        from app.error_handlers import register_error_handlers
+        register_error_handlers(app)
 
     return app
 

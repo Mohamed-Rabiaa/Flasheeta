@@ -7,6 +7,7 @@ Handles business logic for deck operations
 from typing import List, Optional, Dict
 from app.models.deck import Deck
 from app.models.user import User
+from app.exceptions import ValidationError, NotFoundError, ConflictError
 from flask import current_app as app
 
 
@@ -30,7 +31,7 @@ class DeckService:
         """
         # Validate name
         if not name or not name.strip():
-            raise ValueError("Deck name cannot be empty")
+            raise ValidationError("Deck name cannot be empty")
         
         # Check if deck with same name already exists for this user
         existing_deck = Deck.query.filter_by(
@@ -39,7 +40,7 @@ class DeckService:
         ).first()
         
         if existing_deck:
-            raise ValueError(f"Deck with name '{name}' already exists")
+            raise ConflictError(f"Deck with name '{name}' already exists")
         
         # Create deck
         deck = Deck(name=name.strip(), user_id=user_id)

@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, current_app as app
 from flask_login import login_required, current_user
 from app.models.flashcard import Flashcard
 from app.services.flashcard_service import FlashcardService
+from app.exceptions import NotFoundError
 from app import db, csrf
 
 flashcards_view = Blueprint('flashcards_view', __name__, url_prefix='/api/v1/') 
@@ -41,11 +42,11 @@ def get_flashcard(flashcard_id):
 
     Returns:
         tuple: A tuple containing a JSON response with the flashcard data and an HTTP status code 200 if found,
-               or a JSON response with an error message and HTTP status code 404 if not found.
+               or raises NotFoundError if the flashcard is not found.
     """
     flashcard = FlashcardService.get_flashcard_by_id(flashcard_id)
     if not flashcard:
-        return jsonify({'error': 'Not Found'}), 404
+        raise NotFoundError('Flashcard not found')
 
     return jsonify(flashcard.to_dict()), 200
 
@@ -61,10 +62,10 @@ def delete_flashcard(flashcard_id):
         flashcard_id (str): The ID of the flashcard to delete.
 
     Returns:
-        tuple: An empty JSON response and HTTP status code 204 if deletion is successful,
-               or a JSON response with an error message and HTTP status code 404 if the flashcard is not found.
+        tuple: Success message with HTTP status code 200 if deletion is successful,
+               or raises NotFoundError if the flashcard is not found.
     """
     if not FlashcardService.delete_flashcard(flashcard_id):
-        return jsonify({'error': 'Not Found'}), 404
+        raise NotFoundError('Flashcard not found')
 
-    return jsonify({}), 204
+    return jsonify({'message': 'Flashcard deleted successfully'}), 200

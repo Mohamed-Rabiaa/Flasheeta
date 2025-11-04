@@ -7,6 +7,7 @@ from app.models.progress import Progress
 from app.models.flashcard import Flashcard
 from app.services.progress_service import ProgressService
 from app.services.flashcard_service import FlashcardService
+from app.exceptions import NotFoundError, ValidationError
 from app import db, csrf
 from datetime import datetime
 
@@ -56,7 +57,7 @@ def get_flashcard_progress(flashcard_id):
     progress = ProgressService.get_progress(flashcard_id)
 
     if not progress:
-        return jsonify({'error': 'Not Found'}), 404
+        raise NotFoundError('Progress not found for this flashcard')
 
     return jsonify(progress.to_dict()), 200
 
@@ -80,18 +81,18 @@ def update_flashcard_progress(flashcard_id):
     """
     data = request.get_json()
     if not data:
-        return jsonify({'error': 'Not a JSON'}), 400
+        raise ValidationError('Request body must be valid JSON')
 
     # Validate datetime format if present
     if 'next_review_date' in data:
         try:
             datetime.fromisoformat(data['next_review_date'].replace('Z', '+00:00'))
         except ValueError:
-            return jsonify({'error': 'Invalid datetime format'}), 400
+            raise ValidationError('Invalid datetime format for next_review_date')
 
     # Update progress using service
     progress = ProgressService.update_progress(flashcard_id, data)
     if not progress:
-        return jsonify({'error': 'Not Found'}), 404
+        raise NotFoundError('Progress not found for this flashcard')
 
     return jsonify(progress.to_dict()), 200
