@@ -10,8 +10,8 @@ app_host = os.environ.get('FLASK_RUN_HOST')
 CORS(app, resources={
     r"/api/*": {
         "origins": [
-            "http://127.0.0.1:5000",
-            "http://localhost:5000",
+            "http://127.0.0.1:5173",
+            "http://localhost:5173",
             "http://158.180.238.158:5000" # oracle cloud instance public ip address
         ],
         "supports_credentials": True
