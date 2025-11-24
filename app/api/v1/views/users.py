@@ -3,6 +3,7 @@
 
 from flask import Blueprint, jsonify
 from flask_login import current_user, login_required
+from app.services.user_service import UserService
 
 users_view = Blueprint('users_view', __name__, url_prefix='/api/v1/') 
 
@@ -36,7 +37,5 @@ def create_user(user_name, email, password):
         tuple: A tuple containing a JSON response with the newly created user's information
                and an HTTP status code 201.
     """
-    from app.services.user_service import UserService
-
     new_user = UserService.create_user(user_name, email, password)
     return jsonify(new_user.to_dict()), 201
