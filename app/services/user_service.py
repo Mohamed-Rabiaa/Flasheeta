@@ -44,4 +44,26 @@ class UserService:
         user.save()
         
         return user
+    
+    @staticmethod
+    def authenticate_user(email: str, password: str) -> User:
+        """
+        Authenticates a user by email and password
+        
+        Args:
+            email: The user's email
+            password: The user's password
+            
+        Returns:
+            The authenticated User object
+            
+        Raises:
+            ValidationError: If authentication fails
+        """
+        user = User.query.filter_by(email=email).first()
+        
+        if not user or not user.check_password(password):
+            raise ValidationError("Invalid email or password")
+        
+        return user
         

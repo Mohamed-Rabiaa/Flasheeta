@@ -1,12 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_migrate import Migrate
-from flask_login import LoginManager, logout_user
+from flask_jwt_extended import JWTManager
 from flask_wtf import CSRFProtect
 from app.models.engine.db_storage import DBStorage
 
 db = SQLAlchemy()
-login_manager = LoginManager()
+jwt = JWTManager()
 migrate = Migrate()
 csrf = CSRFProtect()
 
@@ -21,12 +21,7 @@ def create_app():
     csrf.init_app(app)
     db.init_app(app)
     app.storage = DBStorage(db)
-    login_manager.init_app(app)
-    
-    # Configure Flask-Login
-    login_manager.login_view = 'auth.login'
-    login_manager.login_message = 'Please log in to access this page.'
-    login_manager.login_message_category = 'info'
+    jwt.init_app(app)
     
     migrate.init_app(app, db)
 
