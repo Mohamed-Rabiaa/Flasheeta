@@ -1,11 +1,15 @@
-// Placeholder pages - we'll implement these fully later
+import LoginForm from '../components/auth/LoginForm.jsx';
+import Card from '../components/common/Card.jsx';
+import Link from '../components/common/Link.jsx';
 
 const LoginPage = () => {
   return (
-    <div>
-      <h1>Login Page</h1>
-      <p>Login form will go here</p>
-    </div>
+    <Card title="Login">
+      <LoginForm />
+      <p className="text-sm text-center mt-4">
+         Don't have an account? <Link href="/register" text="Sign up" />
+      </p>
+    </Card>
   );
 };
 
