@@ -52,13 +52,13 @@ def create_app():
 
 from flask import current_app as app
 
+'''
 @login_manager.user_loader
 def load_user(user_id):
     """ Loads the user """
     from app.models.user import User
     return app.storage.get(User, user_id)
-
-'''
+    
 with app.app_context():
     @app.teardown_appcontext
     def close_db():

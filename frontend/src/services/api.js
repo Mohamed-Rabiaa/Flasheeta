@@ -3,18 +3,18 @@ import axios from 'axios';
 // Create axios instance with default config
 const api = axios.create({
   baseURL: 'http://localhost:5000/api/v1',
-  withCredentials: true, // Important for session-based auth
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor - add CSRF token if available
+// Request interceptor - add JWT token to Authorization header
 api.interceptors.request.use(
   (config) => {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    if (csrfToken) {
-      config.headers['X-CSRFToken'] = csrfToken;
+    // Get JWT token from localStorage
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
